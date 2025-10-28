@@ -9,5 +9,16 @@
     <button type="submit">Login</button>
   </form>
   <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 </body>
 </html>

@@ -1,3 +1,37 @@
+.flash-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  z-index: 1000;
+}
+
+.flash-message {
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  animation: fadeInOut 4s ease forwards;
+}
+
+/* Categories */
+.flash-message.success {
+  background-color: #4CAF50; /* Green */
+}
+
+.flash-message.error {
+  background-color: #f44336; /* Red */
+}
+
+/* Simple fade in/out animation */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
 body {
     margin: 0;
     font-family: Arial, sans-serif;
