@@ -30,6 +30,11 @@ class WaterLog(db.Model):
 def home():
     return render_template('index.html')
 
+@app.route('/feed')
+def feed_page():
+    return render_template('feed.html')
+
+
 # --- Egg Log API ---
 @app.route('/api/eggs', methods=['POST'])
 def add_egg_log():
