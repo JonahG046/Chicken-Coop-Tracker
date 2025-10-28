@@ -47,3 +47,18 @@ def test_add_water_log(client, monkeypatch):
     response = client.post('/api/water', json={'date': '2025-10-13', 'amount': 3.0})
     assert response.status_code == 201
     assert b'Water log added successfully' in response.data
+
+
+def test_register_user(client, monkeypatch):
+    def mock_commit():
+        return None
+    monkeypatch.setattr('app.db.session.commit', mock_commit)
+
+    response = client.post('/register', data={
+        'username': 'testuser',
+        'email': 'test@example.com',
+        'password': 'password123'
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+    assert b'Account created successfully! Please log in.' in response.data
