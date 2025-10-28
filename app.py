@@ -62,6 +62,13 @@ def settings():
             user = User.query.get(session['user_id'])
             return render_template('settings.html', user=user)
     return redirect(url_for('login'))
+
+@app.route('/test-flash')
+def test_flash():
+    flash('This is a test success message!', 'success')
+    flash('This is a test error message!', 'error')
+    return render_template('flash_test.html')
+    
     
 @app.route('/register', methods=['GET', 'POST'])
 def register():
