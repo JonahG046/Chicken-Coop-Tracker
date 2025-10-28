@@ -1,8 +1,11 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+app.secret_key = 'donttellanybodythiskeyatall' # Super Secret Key Tell NOBODY
+
 # MySQL connection placeholder (replace with credentials later)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/chickendb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -29,7 +32,7 @@ class FeedLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    
+
 # --- Water Log Model ---
 class WaterLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,6 +47,52 @@ def home():
 @app.route('/feed')
 def feed_page():
     return render_template('feed.html')
+
+@app.route('/settings')
+def settings():
+    if 'user_id' in session:
+            user = User.query.get(session['user_id'])
+            return render_template('settings.html', user=user)
+    return redirect(url_for('login'))
+    
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        hashed_pw = generate_password_hash(password, method='sha256')
+        new_user = User(username=username, email=email, password=hashed_pw)
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Account created successfully! Please log in.')
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            flash('Logged in successfully!')
+            return redirect(url_for('settings'))
+        else:
+            flash('Invalid username or password.')
+            return redirect(url_for('login'))
+
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash('You have been logged out.')
+    return redirect(url_for('login'))
 
 
 # --- Egg Log API ---
