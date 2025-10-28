@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chicken Coop Tracker</title>
-  <!-- Link to CSS in the static folder parallel to template -->
-  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header>
@@ -14,35 +13,35 @@
   </header>
 
   <nav>
-    <a href="/feed">Feed</a>
-    <a href="water.html">Water</a>
-    <a href="eggs.html">Eggs</a>
-    <a href="/settings">Settings</a>
+    <a href="{{ url_for('feed') }}">Feed</a>
+    <a href="{{ url_for('water') }}">Water</a>
+    <a href="{{ url_for('eggs') }}">Eggs</a>
+    <a href="{{ url_for('settings') }}">Settings</a>
   </nav>
 
   <div class="container">
     <div class="card">
       <h2>Feed</h2>
       <p>Track daily feed usage</p>
-      <a href="/feed">Go to Feed</a>
+      <a href="{{ url_for('feed') }}">Go to Feed</a>
     </div>
 
     <div class="card">
       <h2>Water</h2>
       <p>Log water refills and levels</p>
-      <a href="water.html">Go to Water</a>
+      <a href="{{ url_for('water') }}">Go to Water</a>
     </div>
 
     <div class="card">
       <h2>Eggs</h2>
       <p>Record daily egg counts</p>
-      <a href="eggs.html">Go to Eggs</a>
+      <a href="{{ url_for('eggs') }}">Go to Eggs</a>
     </div>
 
     <div class="card">
       <h2>Settings</h2>
       <p>Coop details and preferences</p>
-      <a href="/settings">Go to Settings</a>
+      <a href="{{ url_for('settings') }}">Go to Settings</a>
     </div>
   </div>
 

@@ -45,8 +45,16 @@ def home():
     return render_template('index.html')
 
 @app.route('/feed')
-def feed_page():
+def feed():
     return render_template('feed.html')
+
+@app.route('/water')
+def water():
+    return render_template('water.html')
+
+@app.route('/eggs')
+def eggs():
+    return render_template('eggs.html')
 
 @app.route('/settings')
 def settings():
