@@ -42,6 +42,10 @@ class WaterLog(db.Model):
     date = db.Column(db.Date, nullable=False)
     amount = db.Column(db.Float, nullable=False)
 
+# --- Create tables ---
+with app.app_context():
+    db.create_all()
+    
 # --- Routes ---
 
 @app.route('/')
