@@ -7,7 +7,11 @@ app = Flask(__name__)
 app.secret_key = 'donttellanybodythiskeyatall'  # Secret key for session management and flash messages
 
 # MySQL connection placeholder (replace with real credentials later)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/chickendb'
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    "postgresql+psycopg2://mridfhdnew:l$llnd8CCuDMAKYy@"
+    "chickencooptracker-server.postgres.database.azure.com:5432/"
+    "chickencooptracker-database?sslmode=require"
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable unnecessary tracking to save resources
 
 db = SQLAlchemy(app)  # Initialize SQLAlchemy ORM
