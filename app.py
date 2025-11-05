@@ -8,7 +8,7 @@ app.secret_key = 'donttellanybodythiskeyatall'  # Secret key for session managem
 
 # MySQL connection placeholder (replace with real credentials later)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    "postgresql+psycopg2://lfflrqbwxa:{your_password}"
+    "postgresql+psycopg2://lfflrqbwxa:Slugger%40046"
     "@chicken-server.postgres.database.azure.com:5432/postgres?sslmode=require"
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable unnecessary tracking to save resources
