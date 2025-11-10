@@ -55,7 +55,7 @@ def home():
 @app.route('/feed')
 def feed():
     # Render the feed tracking page
-    return render_template('feed.html')
+    return render_template('feed.html', datetime=datetime)
 
 @app.route('/water')
 def water():
