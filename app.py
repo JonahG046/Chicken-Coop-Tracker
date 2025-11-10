@@ -60,7 +60,7 @@ def feed():
 @app.route('/water')
 def water():
     # Render the water tracking page
-    return render_template('water.html')
+    return render_template('water.html', datetime=datetime)
 
 @app.route('/eggs')
 def eggs():
