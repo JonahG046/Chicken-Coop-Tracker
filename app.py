@@ -65,7 +65,7 @@ def water():
 @app.route('/eggs')
 def eggs():
     # Render the egg tracking page
-    return render_template('eggs.html')
+    return render_template('eggs.html', datetime=datetime)
 
 @app.route('/settings')
 def settings():
