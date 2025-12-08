@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title or "Chicken Coop Tracker" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+  <h1>Chicken Coop Tracker</h1>
+</header>
+
+<nav>
+  <a href="{{ url_for('home') }}">Home</a>
+  <a href="{{ url_for('feed') }}">Feed</a>
+  <a href="{{ url_for('water') }}">Water</a>
+  <a href="{{ url_for('eggs') }}">Eggs</a>
+  <a href="{{ url_for('settings') }}">Settings</a>
+</nav>
+
+<!-- 🔹 Modal Trigger Button -->
+<div class="container">
+  <button id="openModal" class="primary-btn">Add Log</button>
+</div>
+
+<!-- 🔹 Global Modal -->
+<div id="logModal" class="modal">
+  <div class="modal-content">
+    <span id="closeModal" class="close">&times;</span>
+
+    <h2>Add Log</h2>
+
+    <form id="logForm">
+      <label for="logType">Type:</label>
+      <select id="logType" name="logType" required>
+        <option value="">Select Type</option>
+        <option value="feed">Feed</option>
+        <option value="water">Water</option>
+        <option value="eggs">Eggs</option>
+      </select>
+
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="value">Value:</label>
+      <input type="number" id="value" name="amount" min="0" step="0.1" required>
+      <small id="valueLabelHelp"></small>
+
+      <button type="submit" class="primary-btn">Submit</button>
+    </form>
+
+    <div id="message" class="message"></div>
+  </div>
+</div>
+
+<!-- 🔹 Page-specific content goes here -->
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<footer>
+  <p>&copy; 2025 Chicken Coop Tracker</p>
+</footer>
+
+
+<!-- 🔹 Global Modal Script -->
+<script>
+const modal = document.getElementById('logModal');
+const openBtn = document.getElementById('openModal');
+const closeBtn = document.getElementById('closeModal');
+const form = document.getElementById('logForm');
+const logTypeEl = document.getElementById('logType');
+const messageEl = document.getElementById('message');
+const valueLabelHelp = document.getElementById('valueLabelHelp');
+
+// Open Modal
+openBtn.addEventListener('click', () => {
+  document.getElementById('date').valueAsDate = new Date();
+  modal.style.display = 'block';
+});
+
+// Close Modal actions
+closeBtn.addEventListener('click', () => modal.style.display = 'none');
+window.addEventListener('click', (e) => {
+  if (e.target === modal) modal.style.display = 'none';
+});
+
+// Help text changes
+logTypeEl.addEventListener('change', () => {
+  const type = logTypeEl.value;
+  if (type === "feed") valueLabelHelp.textContent = "Enter pounds of feed given.";
+  else if (type === "water") valueLabelHelp.textContent = "Enter liters of water provided.";
+  else if (type === "eggs") valueLabelHelp.textContent = "Enter number of eggs collected.";
+  else valueLabelHelp.textContent = "";
+});
+
+// Submit log
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const type = logTypeEl.value;
+  const date = document.getElementById('date').value;
+  const amount = document.getElementById('value').value;
+
+  messageEl.textContent = '';
+  if (!type || !date || !amount) {
+    messageEl.textContent = "Please fill out all fields.";
+    messageEl.className = "message error";
+    return;
+  }
+
+  const endpoint = `/api/${type}`;
+  
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, amount })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      messageEl.textContent = "Log added!";
+      messageEl.className = "message success";
+      setTimeout(() => {
+        modal.style.display = 'none';
+        form.reset();
+        messageEl.textContent = "";
+      }, 700);
+    } else {
+      messageEl.textContent = data.error || "Error submitting log.";
+      messageEl.className = "message error";
+    }
+
+  } catch (err) {
+    console.error(err);
+    messageEl.textContent = "Unexpected error.";
+    messageEl.className = "message error";
+  }
+});
+</script>
+
+</body>
+</html>
