@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Feed Log</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='js/popup.js') }}" defer></script>
 </head>
 <body>
 
@@ -20,68 +21,15 @@
   <a href="{{ url_for('settings') }}">Settings</a>
 </nav>
 
-<div class="container single-card">
-  <div class="card">
-    <h2>Add Feed Log</h2>
-    <form id="feedForm">
-      <label for="date">Date:</label>
-      <input type="date" id="date" name="date" value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}" required>
+<!-- Button opens the add_feed form in a popup -->
+<button onclick="openPopup('{{ url_for('add_feed') }}')">Add Feed Log</button>
 
-      <label for="amount">Feed Amount (lbs):</label>
-      <input type="number" id="amount" name="amount" min="0" step="0.1" placeholder="Enter amount of feed" required>
-
-      <button type="submit">Submit</button>
-    </form>
-
-    <div id="message" class="message"></div>
-  </div>
-</div>
 
 <footer>
   <p>&copy; 2025 Chicken Coop Tracker</p>
 </footer>
 
-<script>
-document.getElementById('feedForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
 
-    const date = document.getElementById('date').value;
-    const amount = document.getElementById('amount').value;
-    const messageEl = document.getElementById('message');
-
-    messageEl.textContent = '';
-
-    if (!date || !amount) {
-        messageEl.textContent = 'Please fill out all fields.';
-        messageEl.className = 'message error';
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/feed', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date, amount })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            messageEl.textContent = data.message || 'Feed log added successfully!';
-            messageEl.className = 'message success';
-            document.getElementById('feedForm').reset();
-            document.getElementById('date').valueAsDate = new Date();
-        } else {
-            messageEl.textContent = data.error || 'Error adding feed log.';
-            messageEl.className = 'message error';
-        }
-    } catch (err) {
-        console.error(err);
-        messageEl.textContent = 'An unexpected error occurred.';
-        messageEl.className = 'message error';
-    }
-});
-</script>
 
 </body>
 </html>
