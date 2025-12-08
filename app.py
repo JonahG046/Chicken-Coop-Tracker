@@ -78,15 +78,15 @@ def settings():
 
 @app.route('/add_feed')
 def add_feed():
-    return render_template('add_feed.html')
+    return render_template('add_feed.html', datetime=datetime)
 
 @app.route('/add_water')
 def add_water():
-    return render_template('add_water.html')
+    return render_template('add_water.html', datetime=datetime)
 
 @app.route('/add_eggs')
 def add_eggs():
-    return render_template('add_eggs.html')
+    return render_template('add_eggs.html', datetime=datetime)
 
 @app.route('/test-flash')
 def test_flash():
