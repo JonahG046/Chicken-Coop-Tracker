@@ -43,7 +43,6 @@ class WaterLog(db.Model):
 
 # --- Create tables ---
 with app.app_context():
-    db.drop_all()
     db.create_all()
     
 # --- Routes ---
