@@ -43,14 +43,39 @@ class WaterLog(db.Model):
 
 # --- Create tables ---
 with app.app_context():
+    db.drop_all()
     db.create_all()
     
 # --- Routes ---
 
 @app.route('/')
 def home():
-    # Render the main home page
-    return render_template('index.html')
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    from datetime import datetime, timedelta
+    today = datetime.utcnow().date()
+    week_ago = today - timedelta(days=6)
+
+    # Feed
+    feed_logs = FeedLog.query.filter(FeedLog.user_id == session['user_id'],
+                                     FeedLog.date >= week_ago).order_by(FeedLog.date).all()
+    feed_data = {log.date.strftime('%m-%d-%Y'): log.amount for log in feed_logs}
+
+    # Water
+    water_logs = WaterLog.query.filter(WaterLog.user_id == session['user_id'],
+                                       WaterLog.date >= week_ago).order_by(WaterLog.date).all()
+    water_data = {log.date.strftime('%m-%d-%Y'): log.amount for log in water_logs}
+
+    # Eggs
+    egg_logs = EggLog.query.filter(EggLog.user_id == session['user_id'],
+                                   EggLog.date >= week_ago).order_by(EggLog.date).all()
+    egg_data = {log.date.strftime('%m-%d-%Y'): log.count for log in egg_logs}
+
+    return render_template('index.html',
+                           feed_data=feed_data,
+                           water_data=water_data,
+                           egg_data=egg_data)
 
 @app.route('/feed')
 def feed():
@@ -71,7 +96,7 @@ def eggs():
 def settings():
     # Render the user settings page if logged in
     if 'user_id' in session:
-        user = User.query.get(session['user_id'])
+        user = db.session.get(User, session['user_id'])
         return render_template('settings.html', user=user)
     # Redirect to login if user is not authenticated
     return redirect(url_for('login'))
