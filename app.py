@@ -19,27 +19,27 @@ db = SQLAlchemy(app)  # Initialize SQLAlchemy ORM
 # User model to store account info
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)  # Hashed password
-
-# Egg log model to track egg counts
+    password = db.Column(db.String(200), nullable=False)
+    
 class EggLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     count = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-# Feed log model to track feed amounts
 class FeedLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     amount = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-# Water log model to track water amounts
 class WaterLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     amount = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 # --- Create tables ---
 with app.app_context():
@@ -138,34 +138,43 @@ def logout():
 
 @app.route('/api/eggs', methods=['POST'])
 def add_egg_log():
-    # API route to add a new egg log
+    if 'user_id' not in session:
+        return jsonify({'error': 'You must be logged in to add logs.'}), 401
+
     data = request.get_json()
     try:
         date = datetime.strptime(data['date'], '%Y-%m-%d').date()
         count = int(data['count'])
-        new_log = EggLog(date=date, count=count)
+        new_log = EggLog(date=date, count=count, user_id=session['user_id'])
         db.session.add(new_log)
         db.session.commit()
         return jsonify({'message': 'Egg log added successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-
+    
 @app.route('/api/eggs', methods=['GET'])
 def get_egg_logs():
-    # API route to retrieve all egg logs
-    logs = EggLog.query.all()
-    return jsonify([{'id': log.id, 'date': log.date.strftime('%Y-%m-%d'), 'count': log.count} for log in logs])
+    if 'user_id' not in session:
+        return jsonify({'error': 'You must be logged in to view logs.'}), 401
+
+    logs = EggLog.query.filter_by(user_id=session['user_id']).all()
+    return jsonify([
+        {'id': log.id, 'date': log.date.strftime('%Y-%m-%d'), 'count': log.count}
+        for log in logs
+    ])
 
 # --- Feed Log API ---
 
 @app.route('/api/feed', methods=['POST'])
 def add_feed_log():
-    # API route to add a new feed log
+    if 'user_id' not in session:
+        return jsonify({'error': 'You must be logged in to add logs.'}), 401
+
     data = request.get_json()
     try:
         date = datetime.strptime(data['date'], '%Y-%m-%d').date()
         amount = float(data['amount'])
-        new_log = FeedLog(date=date, amount=amount)
+        new_log = FeedLog(date=date, amount=amount, user_id=session['user_id'])
         db.session.add(new_log)
         db.session.commit()
         return jsonify({'message': 'Feed log added successfully'}), 201
@@ -174,20 +183,27 @@ def add_feed_log():
 
 @app.route('/api/feed', methods=['GET'])
 def get_feed_logs():
-    # API route to retrieve all feed logs
-    logs = FeedLog.query.all()
-    return jsonify([{'id': log.id, 'date': log.date.strftime('%Y-%m-%d'), 'amount': log.amount} for log in logs])
+    if 'user_id' not in session:
+        return jsonify({'error': 'You must be logged in to view logs.'}), 401
+
+    logs = FeedLog.query.filter_by(user_id=session['user_id']).all()
+    return jsonify([
+        {'id': log.id, 'date': log.date.strftime('%Y-%m-%d'), 'amount': log.amount}
+        for log in logs
+    ])
 
 # --- Water Log API ---
 
 @app.route('/api/water', methods=['POST'])
 def add_water_log():
-    # API route to add a new water log
+    if 'user_id' not in session:
+        return jsonify({'error': 'You must be logged in to add logs.'}), 401
+
     data = request.get_json()
     try:
         date = datetime.strptime(data['date'], '%Y-%m-%d').date()
         amount = float(data['amount'])
-        new_log = WaterLog(date=date, amount=amount)
+        new_log = WaterLog(date=date, amount=amount, user_id=session['user_id'])
         db.session.add(new_log)
         db.session.commit()
         return jsonify({'message': 'Water log added successfully'}), 201
@@ -196,9 +212,14 @@ def add_water_log():
 
 @app.route('/api/water', methods=['GET'])
 def get_water_logs():
-    # API route to retrieve all water logs
-    logs = WaterLog.query.all()
-    return jsonify([{'id': log.id, 'date': log.date.strftime('%Y-%m-%d'), 'amount': log.amount} for log in logs])
+    if 'user_id' not in session:
+        return jsonify({'error': 'You must be logged in to view logs.'}), 401
+
+    logs = WaterLog.query.filter_by(user_id=session['user_id']).all()
+    return jsonify([
+        {'id': log.id, 'date': log.date.strftime('%Y-%m-%d'), 'amount': log.amount}
+        for log in logs
+    ])
 
 # --- Run the app ---
 if __name__ == '__main__':
