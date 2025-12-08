@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Feed Log</title>
+    <title>Add Water Log</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='js/popup.js') }}" defer></script>
 </head>
 <body>
 
-<h2>Add Feed Log</h2>
+<h2>Add Water Log</h2>
 
-<form id="feedForm">
+<form id="waterForm">
     <label for="date">Date:</label>
     <input type="date" id="date" name="date" 
            value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}" required>
 
-    <label for="amount">Feed Amount (lbs):</label>
+    <label for="amount">Water Amount (liters):</label>
     <input type="number" id="amount" name="amount" 
-           min="0" step="0.1" placeholder="Enter amount of feed" required>
+           min="0" step="0.1" placeholder="Enter liters of water" required>
 
     <button type="submit">Submit</button>
 </form>
@@ -24,7 +24,7 @@
 <div id="msg" class="message"></div>
 
 <script>
-document.getElementById('feedForm').addEventListener('submit', async (event) => {
+document.getElementById('waterForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const date = document.getElementById('date').value;
@@ -40,7 +40,7 @@ document.getElementById('feedForm').addEventListener('submit', async (event) => 
     }
 
     try {
-        const response = await fetch('/api/feed', {
+        const response = await fetch('/api/water', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ date, amount })
@@ -49,17 +49,16 @@ document.getElementById('feedForm').addEventListener('submit', async (event) => 
         const data = await response.json();
 
         if (response.ok) {
-            messageEl.textContent = data.message || 'Feed log added successfully!';
+            messageEl.textContent = data.message || 'Water log added successfully!';
             messageEl.className = 'message success';
-            document.getElementById('feedForm').reset();
+            document.getElementById('waterForm').reset();
             document.getElementById('date').valueAsDate = new Date();
 
-            // Close popup and refresh parent
             if (typeof closePopupAndRefresh === 'function') {
                 closePopupAndRefresh();
             }
         } else {
-            messageEl.textContent = data.error || 'Error adding feed log.';
+            messageEl.textContent = data.error || 'Error adding water log.';
             messageEl.className = 'message error';
         }
     } catch (err) {
