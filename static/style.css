@@ -1,3 +1,4 @@
+/* --- Flash Messages --- */
 .flash-container {
   position: fixed;
   top: 20px;
@@ -16,121 +17,117 @@
   animation: fadeInOut 4s ease forwards;
 }
 
-/* Categories */
-.flash-message.success {
-  background-color: #4CAF50; /* Green */
-}
+.flash-message.success { background-color: #4CAF50; }
+.flash-message.error { background-color: #f44336; }
 
-.flash-message.error {
-  background-color: #f44336; /* Red */
-}
-
-/* Simple fade in/out animation */
 @keyframes fadeInOut {
   0% { opacity: 0; transform: translateY(-20px); }
   10% { opacity: 1; transform: translateY(0); }
   90% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(-20px); }
 }
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-    color: #333;
-  }
-  
-  header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-  }
-  
-  nav {
-    background: #333;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    padding: 0.5rem 0;
-  }
-  
-  nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  nav a:hover {
-    text-decoration: underline;
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .card {
-    background: white;
-    border-radius: 10px;
-    padding: 1rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-  
-  .card h2 {
-    margin-top: 0;
-    color: #4CAF50;
-  }
-  
-  .card p {
-    margin-bottom: 1rem;
-  }
-  
-  .card a {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background: #4CAF50;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-  }
-  
-  .card a:hover {
-    background: #45a049;
-  }
-  
-  footer {
-    background: #333;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    margin-top: 2rem;
-  }
 
-  /* --- Feed (Add Egg Log) Form --- */
-.single-card {
+/* --- Body & Layout --- */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  color: #333;
+}
+
+header {
+  background-color: #4CAF50;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+header p {
+  margin: 0.3rem 0 0 0;
+  font-size: 1rem;
+}
+
+nav {
+  background: #333;
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 3rem;
+  gap: 2rem;
+  padding: 0.5rem 0;
 }
 
-form {
-  text-align: left;
-}
-
-label {
-  display: block;
-  margin-top: 10px;
+nav a {
+  color: white;
+  text-decoration: none;
   font-weight: bold;
 }
 
-input[type="date"],
-input[type="number"] {
+nav a:hover { text-decoration: underline; }
+
+.container.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card h2 {
+  margin-top: 0;
+  color: #4CAF50;
+}
+
+.card p {
+  margin-bottom: 1rem;
+}
+
+.card a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.card a:hover { background: #45a049; }
+
+canvas {
+  width: 100% !important;
+  height: 300px !important;
+  margin-top: 1rem;
+}
+
+footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* --- Feed / Water / Eggs Form Styles --- */
+.single-card { display: flex; justify-content: center; align-items: center; margin-top: 3rem; }
+form { text-align: left; }
+label { display: block; margin-top: 10px; font-weight: bold; }
+input[type="date"], input[type="number"] {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -151,25 +148,12 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
-}
+button:hover { background-color: #45a049; }
 
-.message {
-  margin-top: 15px;
-  text-align: center;
-  font-weight: bold;
-}
+.message { margin-top: 15px; text-align: center; font-weight: bold; }
+.success { color: #4CAF50; }
+.error { color: #f44336; }
 
-.success {
-  color: #4CAF50;
-}
-
-.error {
-  color: #f44336;
-}
-
-/* Popup Add Log Button */
 .popup-add-btn {
   display: inline-block;
   width: auto;
@@ -183,6 +167,4 @@ button:hover {
   text-decoration: none;
 }
 
-.popup-add-btn:hover {
-  background-color: #45a049;
-}
+.popup-add-btn:hover { background-color: #45a049; }
