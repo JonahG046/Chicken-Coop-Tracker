@@ -76,6 +76,18 @@ def settings():
     # Redirect to login if user is not authenticated
     return redirect(url_for('login'))
 
+@app.route('/add_feed')
+def add_feed():
+    return render_template('add_feed.html')
+
+@app.route('/add_water')
+def add_water():
+    return render_template('add_water.html')
+
+@app.route('/add_eggs')
+def add_eggs():
+    return render_template('add_eggs.html')
+
 @app.route('/test-flash')
 def test_flash():
     # Route to test flash messages
