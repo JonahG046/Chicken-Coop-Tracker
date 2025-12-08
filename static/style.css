@@ -168,3 +168,21 @@ button:hover {
 .error {
   color: #f44336;
 }
+
+/* Popup Add Log Button */
+.popup-add-btn {
+  display: inline-block;
+  width: auto;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 18px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.popup-add-btn:hover {
+  background-color: #45a049;
+}
