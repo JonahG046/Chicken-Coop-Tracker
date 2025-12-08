@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>Water Page</p>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Water Logs</h2>
+
+<!-- Button opens the add_feed form in a popup -->
+<button onclick="openPopup('{{ url_for('add_water') }}')">Add Water Log</button>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+{% endblock %}
