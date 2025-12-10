@@ -78,12 +78,13 @@ def home():
 
 @app.route('/feed')
 def feed():
-    # Render the feed tracking page
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
     from datetime import datetime, timedelta
     today = datetime.utcnow().date()
     week_ago = today - timedelta(days=6)
 
-    # Feed
     feed_logs = FeedLog.query.filter(FeedLog.user_id == session['user_id'],
                                      FeedLog.date >= week_ago).order_by(FeedLog.date).all()
     feed_data = {log.date.strftime('%m-%d-%Y'): log.amount for log in feed_logs}
@@ -92,6 +93,9 @@ def feed():
 
 @app.route('/water')
 def water():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
     from datetime import datetime, timedelta
     today = datetime.utcnow().date()
     week_ago = today - timedelta(days=6)
@@ -107,6 +111,9 @@ def water():
 
 @app.route('/eggs')
 def eggs():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
     from datetime import datetime, timedelta
     today = datetime.utcnow().date()
     week_ago = today - timedelta(days=6)
