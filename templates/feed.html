@@ -1,49 +1,73 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2>Feed Logs</h2>
+<style>
+    /* Restore the card styling so it looks normal */
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        margin: 20px auto;
+        max-width: 700px;
+    }
 
-<!-- Button opens the add_feed form in a popup -->
-<button onclick="openPopup('{{ url_for('add_feed') }}')">Add Feed Log</button>
+    .single-card h2 {
+        margin-top: 0;
+    }
 
-<div class="chart-container">
-    <h3>Feed Last 7 Days</h3>
+    .add-btn {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        background: #4CAF50;
+        color: white;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+    .add-btn:hover {
+        background: #45a049;
+    }
+
+    /* Ensures your Chart.js canvas always shows */
+    #feedChart {
+        width: 100%;
+        height: 300px !important;
+    }
+</style>
+
+<div class="card single-card">
+    <h2>Feed Logs</h2>
+
+    <button class="add-btn" onclick="openPopup('{{ url_for('add_feed') }}')">
+        Add Feed Log
+    </button>
+
     <canvas id="feedChart"></canvas>
 </div>
 
 <script>
-    // Convert Python dictionary to JS
     const feedData = {{ feed_data|tojson }};
 
-    function renderChart(ctx, data, label, color) {
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Object.keys(data),
-                datasets: [{
-                    label: label,
-                    data: Object.values(data),
-                    borderColor: color,
-                    backgroundColor: 'transparent',
-                    fill: false,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-    }
-
-    renderChart(
-        document.getElementById('feedChart').getContext('2d'),
-        feedData,
-        'Feed (lbs)',
-        'green'
-    );
+    new Chart(document.getElementById('feedChart'), {
+        type: 'line',
+        data: {
+            labels: Object.keys(feedData),
+            datasets: [{
+                label: "Feed (lbs)",
+                data: Object.values(feedData),
+                borderColor: "green",
+                backgroundColor: "transparent",
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,  // important for custom height
+            scales: { y: { beginAtZero: true } }
+        }
+    });
 </script>
 {% endblock %}
 

@@ -77,6 +77,7 @@ nav a:hover { text-decoration: underline; }
   margin: auto;
 }
 
+/* --- Card Styles --- */
 .card {
   background: white;
   border-radius: 10px;
@@ -86,6 +87,8 @@ nav a:hover { text-decoration: underline; }
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 700px;
+  margin: 20px auto;
 }
 
 .card h2 {
@@ -109,10 +112,73 @@ nav a:hover { text-decoration: underline; }
 
 .card a:hover { background: #45a049; }
 
+/* --- Buttons --- */
+.add-btn,
+.popup-add-btn,
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.add-btn:hover,
+.popup-add-btn:hover,
+button:hover {
+  background: #45a049;
+}
+
+/* Popup-specific button */
+.popup-add-btn {
+  width: auto;
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+/* --- Forms --- */
+form { text-align: left; }
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="date"],
+input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.message { margin-top: 15px; text-align: center; font-weight: bold; }
+.success { color: #4CAF50; }
+.error { color: #f44336; }
+
+/* --- Chart / Canvas Styling --- */
 canvas {
   width: 100% !important;
   height: 300px !important;
   margin-top: 1rem;
+}
+
+.single-card canvas {
+  max-width: 600px;
+}
+
+/* --- Single-card wrapper --- */
+.single-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
 }
 
 footer {
@@ -122,49 +188,3 @@ footer {
   padding: 1rem;
   margin-top: 2rem;
 }
-
-/* --- Feed / Water / Eggs Form Styles --- */
-.single-card { display: flex; justify-content: center; align-items: center; margin-top: 3rem; }
-form { text-align: left; }
-label { display: block; margin-top: 10px; font-weight: bold; }
-input[type="date"], input[type="number"] {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-button {
-  width: 100%;
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover { background-color: #45a049; }
-
-.message { margin-top: 15px; text-align: center; font-weight: bold; }
-.success { color: #4CAF50; }
-.error { color: #f44336; }
-
-.popup-add-btn {
-  display: inline-block;
-  width: auto;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 18px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.popup-add-btn:hover { background-color: #45a049; }
