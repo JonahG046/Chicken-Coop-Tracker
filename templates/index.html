@@ -22,15 +22,15 @@
 
   <div class="container dashboard">
 
-    <!-- Feed Card -->
-    <div class="card">
+<!-- Feed Card -->
+    <div class="card" id="feedCard">
       <h2>Feed</h2>
       <canvas id="feedChart"></canvas>
       <a href="{{ url_for('feed') }}">Go to Feed</a>
     </div>
 
     <!-- Water Card -->
-    <div class="card">
+    <div class="card" id="waterCard">
       <h2>Water</h2>
       <canvas id="waterChart"></canvas>
       <a href="{{ url_for('water') }}">Go to Water</a>
@@ -81,5 +81,40 @@
     renderChart(document.getElementById('waterChart'), waterData, 'Water (L)', 'blue');
     renderChart(document.getElementById('eggChart'), eggData, 'Eggs (count)', 'orange');
   </script>
+
+  <script>
+  function checkLowLevels(data, containerId, threshold) {
+    const container = document.getElementById(containerId);
+
+    // Get the last value in the dataset
+    const values = Object.values(data).map(Number);
+    const latestValue = values[values.length - 1];  // last value
+
+    if (latestValue < threshold) {
+        container.classList.add('flash-red');
+
+        if (!container.querySelector('.low-label')) {
+            const label = document.createElement('div');
+            label.classList.add('low-label');
+            label.style.position = 'absolute';
+            label.style.top = '10px';
+            label.style.right = '10px';
+            label.style.color = 'white';
+            label.style.fontWeight = 'bold';
+            label.style.fontSize = '1.2rem';
+            label.innerText = 'LOW';
+            container.style.position = 'relative';
+            container.appendChild(label);
+        }
+    }
+}
+
+  // Define thresholds
+  const FEED_THRESHOLD = 7;  // lbs
+  const WATER_THRESHOLD = 2; // liters
+
+  checkLowLevels(feedData, 'feedCard', FEED_THRESHOLD);
+  checkLowLevels(waterData, 'waterCard', WATER_THRESHOLD);
+</script>
 </body>
 </html>
