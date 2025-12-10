@@ -1,39 +1,45 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %}  <!-- Inherits the base layout with header, nav, footer -->
 
 {% block content %}
 <div class="card single-card">
+    <!-- Page heading -->
     <h2>Water Logs</h2>
 
+    <!-- Button to open popup for adding a new water log -->
     <button class="add-btn" onclick="openPopup('{{ url_for('add_water') }}')">
         Add Water Log
     </button>
 
+    <!-- Chart.js canvas to display water consumption over time -->
     <canvas id="waterChart"></canvas>
 </div>
 
 <script>
+    // Convert Flask/Python water_data dictionary to JavaScript object
     const waterData = {{ water_data|tojson }};
 
+    // Initialize Chart.js line chart
     new Chart(document.getElementById('waterChart'), {
-        type: 'line',
+        type: 'line',  // Line chart to show trends
         data: {
-            labels: Object.keys(waterData),
+            labels: Object.keys(waterData),  // Dates
             datasets: [{
-                label: "Water (gal)",
-                data: Object.values(waterData),
-                borderColor: "blue",
+                label: "Water (gal)",        // Chart label
+                data: Object.values(waterData),  // Water amounts
+                borderColor: "blue",         // Line color
                 backgroundColor: "transparent",
-                tension: 0.3
+                tension: 0.3                 // Smooth line curve
             }]
         },
         options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true } }
+            responsive: true,              // Chart adapts to container size
+            scales: { y: { beginAtZero: true } }  // Start y-axis at zero
         }
     });
 </script>
 {% endblock %}
 
 {% block extra_scripts %}
+<!-- Include popup.js for handling modal popups -->
 <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
 {% endblock %}

@@ -1,39 +1,48 @@
 {% extends "layout.html" %}
+<!-- This template extends the base layout (layout.html) so it inherits the header, nav, and footer -->
 
 {% block content %}
 <div class="card single-card">
+    <!-- Card container for the Egg Logs section -->
     <h2>Egg Logs</h2>
 
+    <!-- Button to open the "Add Egg Log" popup -->
     <button class="add-btn" onclick="openPopup('{{ url_for('add_eggs') }}')">
         Add Egg Log
     </button>
 
+    <!-- Canvas element where Chart.js will render the line chart -->
     <canvas id="eggChart"></canvas>
 </div>
 
 <script>
+    // Convert the Python dictionary 'egg_data' passed from Flask to a JavaScript object
     const eggData = {{ egg_data|tojson }};
 
+    // Create a line chart using Chart.js
     new Chart(document.getElementById('eggChart'), {
-        type: 'line',
+        type: 'line', // Chart type
         data: {
-            labels: Object.keys(eggData),
+            labels: Object.keys(eggData), // X-axis labels (dates)
             datasets: [{
-                label: "Eggs Collected",
-                data: Object.values(eggData),
-                borderColor: "orange",
-                backgroundColor: "transparent",
-                tension: 0.3
+                label: "Eggs Collected", // Legend label
+                data: Object.values(eggData), // Y-axis values (egg counts)
+                borderColor: "orange", // Line color
+                backgroundColor: "transparent", // No fill under the line
+                tension: 0.3 // Smooth curves
             }]
         },
         options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true } }
+            responsive: true, // Chart resizes with window
+            scales: {
+                y: { beginAtZero: true } // Y-axis starts at 0
+            }
         }
     });
 </script>
 {% endblock %}
 
 {% block extra_scripts %}
+<!-- Include the popup.js script for handling popups -->
 <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
 {% endblock %}

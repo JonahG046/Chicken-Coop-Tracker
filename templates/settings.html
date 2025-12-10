@@ -1,10 +1,15 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %}  <!-- Inherits the base layout with header, nav, footer -->
 
 {% block content %}
 <div class="card single-card">
+    <!-- Page heading -->
     <h2>Settings</h2>
+
+    <!-- Display current user's information -->
     <p>Welcome, {{ user.username }}</p>
     <p>Email: {{ user.email }}</p>
+
+    <!-- Logout button -->
     <a class="add-btn" href="{{ url_for('logout') }}">Logout</a>
 </div>
 {% endblock %}

@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
+<!-- Extends the main layout (layout.html) for consistent header, navigation, and footer -->
 
 {% block content %}
 <style>
-    /* Restore the card styling so it looks normal */
+    /* Card styling to maintain consistent appearance */
     .card {
         background: white;
         padding: 20px;
@@ -12,10 +13,12 @@
         max-width: 700px;
     }
 
+    /* Remove extra top margin on the h2 inside single cards */
     .single-card h2 {
         margin-top: 0;
     }
 
+    /* Styling for the Add button */
     .add-btn {
         padding: 10px 16px;
         border: none;
@@ -30,7 +33,7 @@
         background: #45a049;
     }
 
-    /* Ensures your Chart.js canvas always shows */
+    /* Ensure Chart.js canvas displays correctly with fixed height */
     #feedChart {
         width: 100%;
         height: 300px !important;
@@ -40,37 +43,42 @@
 <div class="card single-card">
     <h2>Feed Logs</h2>
 
+    <!-- Button to open the "Add Feed Log" popup -->
     <button class="add-btn" onclick="openPopup('{{ url_for('add_feed') }}')">
         Add Feed Log
     </button>
 
+    <!-- Canvas element for the feed line chart -->
     <canvas id="feedChart"></canvas>
 </div>
 
 <script>
+    // Convert Python dictionary feed_data to JS object for Chart.js
     const feedData = {{ feed_data|tojson }};
 
+    // Create a line chart for feed logs
     new Chart(document.getElementById('feedChart'), {
-        type: 'line',
+        type: 'line', // Line chart
         data: {
-            labels: Object.keys(feedData),
+            labels: Object.keys(feedData), // X-axis: dates
             datasets: [{
-                label: "Feed (lbs)",
-                data: Object.values(feedData),
-                borderColor: "green",
-                backgroundColor: "transparent",
-                tension: 0.3
+                label: "Feed (lbs)",        // Y-axis label
+                data: Object.values(feedData), // Y-axis values: feed amounts
+                borderColor: "green",       // Line color
+                backgroundColor: "transparent", // No fill under line
+                tension: 0.3               // Smooth curve
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,  // important for custom height
-            scales: { y: { beginAtZero: true } }
+            responsive: true,              // Chart resizes with screen
+            maintainAspectRatio: false,    // Important for custom height
+            scales: { y: { beginAtZero: true } } // Y-axis starts at 0
         }
     });
 </script>
 {% endblock %}
 
 {% block extra_scripts %}
+<!-- Include popup.js for handling the "Add Feed Log" popup functionality -->
 <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
 {% endblock %}
