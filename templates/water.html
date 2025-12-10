@@ -11,7 +11,6 @@
 </div>
 
 <script>
-    // Convert Python data → JS
     const waterData = {{ water_data|tojson }};
 
     function renderChart(ctx, data, label, color) {
@@ -24,15 +23,12 @@
                     data: Object.values(data),
                     borderColor: color,
                     backgroundColor: 'transparent',
-                    fill: false,
                     tension: 0.3
                 }]
             },
             options: {
                 responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
+                scales: { y: { beginAtZero: true } }
             }
         });
     }
@@ -40,8 +36,12 @@
     renderChart(
         document.getElementById('waterChart').getContext('2d'),
         waterData,
-        'Water (L)',
+        'Water (gal)',
         'blue'
     );
 </script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/popup.js') }}"></script>
 {% endblock %}
