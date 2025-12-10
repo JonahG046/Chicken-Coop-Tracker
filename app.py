@@ -183,10 +183,9 @@ def login():
         # Check password hash
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
-            flash('Logged in successfully!')
             return redirect(url_for('settings'))
         else:
-            flash('Invalid username or password.')
+            flash('Invalid username or password.', 'error')
             return redirect(url_for('login'))
 
     # Render login form if GET request
