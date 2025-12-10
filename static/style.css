@@ -4,7 +4,7 @@
   top: 20px;
   right: 20px;
   width: 300px;
-  z-index: 1000;
+  z-index: 1000; /* Ensure flash messages appear above all content */
 }
 
 .flash-message {
@@ -14,17 +14,17 @@
   color: white;
   font-weight: bold;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  animation: fadeInOut 4s ease forwards;
+  animation: fadeInOut 4s ease forwards; /* fade in and out animation */
 }
 
-.flash-message.success { background-color: #4CAF50; }
-.flash-message.error { background-color: #f44336; }
+.flash-message.success { background-color: #4CAF50; } /* green for success */
+.flash-message.error { background-color: #f44336; }   /* red for error */
 
 @keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(-20px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-20px); }
+  0% { opacity: 0; transform: translateY(-20px); }   /* start invisible above */
+  10% { opacity: 1; transform: translateY(0); }     /* fade in to normal position */
+  90% { opacity: 1; transform: translateY(0); }     /* stay visible */
+  100% { opacity: 0; transform: translateY(-20px); }/* fade out moving up */
 }
 
 
@@ -47,7 +47,7 @@ nav {
   background: #333;
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;     /* <-- FIX so mobile doesn't overflow */
+  flex-wrap: wrap;     /* Prevent overflow on small screens */
   gap: 1rem;
   padding: 0.5rem 0;
 }
@@ -64,12 +64,13 @@ nav a:hover { text-decoration: underline; }
 /* --- Dashboard Grid --- */
 .container.dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));  /* <-- FIX for mobile */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* responsive cards */
   gap: 1.5rem;
   padding: 1.5rem;
   max-width: 1400px;
   margin: auto;
 }
+
 
 /* --- Card Styles --- */
 .card {
@@ -144,7 +145,7 @@ input[type="number"] {
 /* --- Charts --- */
 canvas {
   width: 100% !important;
-  height: 250px !important;  /* smaller for mobile */
+  height: 250px !important;  /* adjust for mobile */
   margin-top: 1rem;
 }
 
@@ -183,12 +184,13 @@ footer {
   }
 }
 
-/* Flash red for low values */
+
+/* --- Flash red for low values (e.g., feed/water) --- */
 .flash-red {
   animation: flashRed 1s ease-in-out infinite;
 }
 
 @keyframes flashRed {
   0%, 100% { background-color: white; }
-  50% { background-color: #ff4d4d; } /* red highlight */
+  50% { background-color: #ff4d4d; } /* red highlight for low levels */
 }
