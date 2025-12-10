@@ -79,7 +79,16 @@ def home():
 @app.route('/feed')
 def feed():
     # Render the feed tracking page
-    return render_template('feed.html', datetime=datetime)
+    from datetime import datetime, timedelta
+    today = datetime.utcnow().date()
+    week_ago = today - timedelta(days=6)
+
+    # Feed
+    feed_logs = FeedLog.query.filter(FeedLog.user_id == session['user_id'],
+                                     FeedLog.date >= week_ago).order_by(FeedLog.date).all()
+    feed_data = {log.date.strftime('%m-%d-%Y'): log.amount for log in feed_logs}
+
+    return render_template('feed.html', feed_data=feed_data, datetime=datetime)
 
 @app.route('/water')
 def water():

@@ -5,6 +5,46 @@
 
 <!-- Button opens the add_feed form in a popup -->
 <button onclick="openPopup('{{ url_for('add_feed') }}')">Add Feed Log</button>
+
+<div class="chart-container">
+    <h3>Feed Last 7 Days</h3>
+    <canvas id="feedChart"></canvas>
+</div>
+
+<script>
+    // Convert Python dictionary to JS
+    const feedData = {{ feed_data|tojson }};
+
+    function renderChart(ctx, data, label, color) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: label,
+                    data: Object.values(data),
+                    borderColor: color,
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    renderChart(
+        document.getElementById('feedChart').getContext('2d'),
+        feedData,
+        'Feed (lbs)',
+        'green'
+    );
+</script>
 {% endblock %}
 
 {% block extra_scripts %}
