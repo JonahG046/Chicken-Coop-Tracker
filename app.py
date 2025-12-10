@@ -78,18 +78,54 @@ def home():
 
 @app.route('/feed')
 def feed():
-    # Render the feed tracking page
-    return render_template('feed.html', datetime=datetime)
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    from datetime import datetime, timedelta
+    today = datetime.utcnow().date()
+    week_ago = today - timedelta(days=6)
+
+    feed_logs = FeedLog.query.filter(FeedLog.user_id == session['user_id'],
+                                     FeedLog.date >= week_ago).order_by(FeedLog.date).all()
+    feed_data = {log.date.strftime('%m-%d-%Y'): log.amount for log in feed_logs}
+
+    return render_template('feed.html', feed_data=feed_data, datetime=datetime)
 
 @app.route('/water')
 def water():
-    # Render the water tracking page
-    return render_template('water.html', datetime=datetime)
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    from datetime import datetime, timedelta
+    today = datetime.utcnow().date()
+    week_ago = today - timedelta(days=6)
+
+    water_logs = WaterLog.query.filter(
+        WaterLog.user_id == session['user_id'],
+        WaterLog.date >= week_ago
+    ).order_by(WaterLog.date).all()
+
+    water_data = {log.date.strftime('%m-%d-%Y'): log.amount for log in water_logs}
+
+    return render_template('water.html', water_data=water_data, datetime=datetime)
 
 @app.route('/eggs')
 def eggs():
-    # Render the egg tracking page
-    return render_template('eggs.html', datetime=datetime)
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    from datetime import datetime, timedelta
+    today = datetime.utcnow().date()
+    week_ago = today - timedelta(days=6)
+
+    egg_logs = EggLog.query.filter(
+        EggLog.user_id == session['user_id'],
+        EggLog.date >= week_ago
+    ).order_by(EggLog.date).all()
+
+    egg_data = {log.date.strftime('%m-%d-%Y'): log.count for log in egg_logs}
+
+    return render_template('eggs.html', egg_data=egg_data, datetime=datetime)
 
 @app.route('/settings')
 def settings():
@@ -154,10 +190,9 @@ def login():
         # Check password hash
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
-            flash('Logged in successfully!')
             return redirect(url_for('settings'))
         else:
-            flash('Invalid username or password.')
+            flash('Invalid username or password.', 'error')
             return redirect(url_for('login'))
 
     # Render login form if GET request
@@ -167,7 +202,7 @@ def login():
 def logout():
     # Clear user session and logout
     session.pop('user_id', None)
-    flash('You have been logged out.')
+    flash('You have been logged out.', 'error')
     return redirect(url_for('login'))
 
 # --- Egg Log API ---

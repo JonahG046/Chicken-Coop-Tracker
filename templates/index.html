@@ -4,15 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chicken Coop Tracker Dashboard</title>
+
+  <!-- Link to main CSS for styling -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <!-- Chart.js library for rendering charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <!-- Header section -->
   <header>
     <h1>Chicken Coop Tracker</h1>
     <p>Monitor Feed • Water • Eggs</p>
   </header>
 
+  <!-- Navigation menu -->
   <nav>
     <a href="{{ url_for('feed') }}">Feed</a>
     <a href="{{ url_for('water') }}">Water</a>
@@ -20,74 +26,110 @@
     <a href="{{ url_for('settings') }}">Settings</a>
   </nav>
 
+  <!-- Main dashboard container -->
   <div class="container dashboard">
 
     <!-- Feed Card -->
-    <div class="card">
+    <div class="card" id="feedCard">
       <h2>Feed</h2>
-      <canvas id="feedChart" width="400" height="200"></canvas>
+      <canvas id="feedChart"></canvas> <!-- Chart.js feed chart -->
       <a href="{{ url_for('feed') }}">Go to Feed</a>
     </div>
 
     <!-- Water Card -->
-    <div class="card">
+    <div class="card" id="waterCard">
       <h2>Water</h2>
-      <canvas id="waterChart" width="400" height="200"></canvas>
+      <canvas id="waterChart"></canvas> <!-- Chart.js water chart -->
       <a href="{{ url_for('water') }}">Go to Water</a>
     </div>
 
     <!-- Eggs Card -->
     <div class="card">
       <h2>Eggs</h2>
-      <canvas id="eggChart" width="400" height="200"></canvas>
+      <canvas id="eggChart"></canvas> <!-- Chart.js egg chart -->
       <a href="{{ url_for('eggs') }}">Go to Eggs</a>
-    </div>
-
-    <!-- Settings Card -->
-    <div class="card">
-      <h2>Settings</h2>
-      <p>Coop details and preferences</p>
-      <a href="{{ url_for('settings') }}">Go to Settings</a>
     </div>
 
   </div>
 
+  <!-- Footer section -->
   <footer>
     &copy; 2025 Chicken Coop Tracker
   </footer>
 
+  <!-- Script to render charts -->
   <script>
-    // Convert Python dictionaries to JS
+    // Convert Python dictionaries passed from Flask to JavaScript objects
     const feedData = {{ feed_data|tojson }};
     const waterData = {{ water_data|tojson }};
     const eggData = {{ egg_data|tojson }};
 
+    // Function to render a line chart using Chart.js
     function renderChart(ctx, data, label, color) {
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Object.keys(data),
-                datasets: [{
-                    label: label,
-                    data: Object.values(data),
-                    borderColor: color,
-                    backgroundColor: 'transparent', // transparent fill
-                    fill: false,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
+      new Chart(ctx, {
+        type: 'line', // Line chart
+        data: {
+          labels: Object.keys(data),           // X-axis labels (dates)
+          datasets: [{
+            label: label,                       // Dataset label
+            data: Object.values(data),          // Y-axis values
+            borderColor: color,                 // Line color
+            backgroundColor: 'transparent',     // No fill under the line
+            tension: 0.3                        // Smooth curve
+          }]
+        },
+        options: {
+          responsive: true,                     // Chart adjusts to screen size
+          scales: {
+            y: { beginAtZero: true }           // Y-axis starts at 0
+          }
+        }
+      });
     }
 
-    renderChart(document.getElementById('feedChart').getContext('2d'), feedData, 'Feed (lbs)', 'green');
-    renderChart(document.getElementById('waterChart').getContext('2d'), waterData, 'Water (L)', 'blue');
-    renderChart(document.getElementById('eggChart').getContext('2d'), eggData, 'Eggs (count)', 'orange');
+    // Render the three charts on the dashboard
+    renderChart(document.getElementById('feedChart'), feedData, 'Feed (lbs)', 'green');
+    renderChart(document.getElementById('waterChart'), waterData, 'Water (L)', 'blue');
+    renderChart(document.getElementById('eggChart'), eggData, 'Eggs (count)', 'orange');
+  </script>
+
+  <!-- Script to check for low feed/water levels and add visual alerts -->
+  <script>
+    function checkLowLevels(data, containerId, threshold) {
+      const container = document.getElementById(containerId);
+
+      // Convert data values to numbers and get the most recent value
+      const values = Object.values(data).map(Number);
+      const latestValue = values[values.length - 1];  // Last recorded value
+
+      // If value below threshold, highlight the card and add a LOW label
+      if (latestValue < threshold) {
+          container.classList.add('flash-red'); // Add CSS class for flashing effect
+
+          // Prevent adding multiple LOW labels
+          if (!container.querySelector('.low-label')) {
+              const label = document.createElement('div');
+              label.classList.add('low-label');
+              label.style.position = 'absolute';
+              label.style.top = '10px';
+              label.style.right = '10px';
+              label.style.color = 'white';
+              label.style.fontWeight = 'bold';
+              label.style.fontSize = '1.2rem';
+              label.innerText = 'LOW';
+              container.style.position = 'relative';
+              container.appendChild(label);
+          }
+      }
+    }
+
+    // Define low thresholds
+    const FEED_THRESHOLD = 7;  // lbs
+    const WATER_THRESHOLD = 2; // liters
+
+    // Check current feed and water levels for low warnings
+    checkLowLevels(feedData, 'feedCard', FEED_THRESHOLD);
+    checkLowLevels(waterData, 'waterCard', WATER_THRESHOLD);
   </script>
 </body>
 </html>

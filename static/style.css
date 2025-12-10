@@ -4,7 +4,7 @@
   top: 20px;
   right: 20px;
   width: 300px;
-  z-index: 1000;
+  z-index: 1000; /* Ensure flash messages appear above all content */
 }
 
 .flash-message {
@@ -14,18 +14,19 @@
   color: white;
   font-weight: bold;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  animation: fadeInOut 4s ease forwards;
+  animation: fadeInOut 4s ease forwards; /* fade in and out animation */
 }
 
-.flash-message.success { background-color: #4CAF50; }
-.flash-message.error { background-color: #f44336; }
+.flash-message.success { background-color: #4CAF50; } /* green for success */
+.flash-message.error { background-color: #f44336; }   /* red for error */
 
 @keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(-20px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-20px); }
+  0% { opacity: 0; transform: translateY(-20px); }   /* start invisible above */
+  10% { opacity: 1; transform: translateY(0); }     /* fade in to normal position */
+  90% { opacity: 1; transform: translateY(0); }     /* stay visible */
+  100% { opacity: 0; transform: translateY(-20px); }/* fade out moving up */
 }
+
 
 /* --- Body & Layout --- */
 body {
@@ -42,21 +43,12 @@ header {
   text-align: center;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-header p {
-  margin: 0.3rem 0 0 0;
-  font-size: 1rem;
-}
-
 nav {
   background: #333;
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  flex-wrap: wrap;     /* Prevent overflow on small screens */
+  gap: 1rem;
   padding: 0.5rem 0;
 }
 
@@ -68,38 +60,37 @@ nav a {
 
 nav a:hover { text-decoration: underline; }
 
+
+/* --- Dashboard Grid --- */
 .container.dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* responsive cards */
+  gap: 1.5rem;
+  padding: 1.5rem;
   max-width: 1400px;
   margin: auto;
 }
 
+
+/* --- Card Styles --- */
 .card {
   background: white;
   border-radius: 10px;
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .card h2 {
-  margin-top: 0;
+  margin: 0;
   color: #4CAF50;
-}
-
-.card p {
-  margin-bottom: 1rem;
 }
 
 .card a {
   display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   background: #4CAF50;
   color: white;
   text-decoration: none;
@@ -109,25 +100,39 @@ nav a:hover { text-decoration: underline; }
 
 .card a:hover { background: #45a049; }
 
-canvas {
-  width: 100% !important;
-  height: 300px !important;
-  margin-top: 1rem;
-}
 
-footer {
-  background: #333;
+/* --- Buttons --- */
+.add-btn,
+.popup-add-btn,
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #4CAF50;
   color: white;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 2rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
 }
 
-/* --- Feed / Water / Eggs Form Styles --- */
-.single-card { display: flex; justify-content: center; align-items: center; margin-top: 3rem; }
+.add-btn:hover,
+.popup-add-btn:hover,
+button:hover {
+  background: #45a049;
+}
+
+
+/* --- Forms --- */
 form { text-align: left; }
-label { display: block; margin-top: 10px; font-weight: bold; }
-input[type="date"], input[type="number"] {
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="date"],
+input[type="number"] {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -136,35 +141,56 @@ input[type="date"], input[type="number"] {
   box-sizing: border-box;
 }
 
-button {
-  width: 100%;
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+
+/* --- Charts --- */
+canvas {
+  width: 100% !important;
+  height: 250px !important;  /* adjust for mobile */
+  margin-top: 1rem;
 }
 
-button:hover { background-color: #45a049; }
 
-.message { margin-top: 15px; text-align: center; font-weight: bold; }
-.success { color: #4CAF50; }
-.error { color: #f44336; }
-
-.popup-add-btn {
-  display: inline-block;
-  width: auto;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 18px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
+/* --- Single-card page wrapper --- */
+.single-card {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
 }
 
-.popup-add-btn:hover { background-color: #45a049; }
+
+/* --- Footer --- */
+footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+
+/* --- Mobile Tweaks --- */
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.6rem;
+  }
+  nav {
+    gap: 0.6rem;
+  }
+  .card {
+    padding: 1rem;
+  }
+  canvas {
+    height: 200px !important;
+  }
+}
+
+
+/* --- Flash red for low values (e.g., feed/water) --- */
+.flash-red {
+  animation: flashRed 1s ease-in-out infinite;
+}
+
+@keyframes flashRed {
+  0%, 100% { background-color: white; }
+  50% { background-color: #ff4d4d; } /* red highlight for low levels */
+}

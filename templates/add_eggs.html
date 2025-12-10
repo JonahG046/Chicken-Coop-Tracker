@@ -2,66 +2,82 @@
 <html>
 <head>
     <title>Add Egg Log</title>
+    <!-- Link to external CSS file for styling -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Link to external JS file (popup.js) with defer so it loads after HTML -->
     <script src="{{ url_for('static', filename='js/popup.js') }}" defer></script>
 </head>
 <body>
 
 <h2>Add Egg Log</h2>
 
+<!-- Form for adding a new egg log -->
 <form id="eggForm">
+    <!-- Date input for the log -->
     <label for="date">Date:</label>
     <input type="date" id="date" name="date" 
            value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}" required>
 
+    <!-- Number input for egg count -->
     <label for="count">Number of Eggs:</label>
     <input type="number" id="count" name="count" 
            min="0" step="1" placeholder="Enter number of eggs" required>
 
+    <!-- Submit button -->
     <button type="submit">Submit</button>
 </form>
 
+<!-- Message container for success/error messages -->
 <div id="msg" class="message"></div>
 
 <script>
+// Add event listener to handle form submission
 document.getElementById('eggForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent default form submission (page reload)
 
+    // Get values from inputs
     const date = document.getElementById('date').value;
     const count = document.getElementById('count').value;
     const messageEl = document.getElementById('msg');
 
+    // Clear previous messages
     messageEl.textContent = '';
 
+    // Basic validation: check if fields are filled
     if (!date || !count) {
         messageEl.textContent = 'Please fill out all fields.';
-        messageEl.className = 'message error';
+        messageEl.className = 'message error'; // Apply error styling
         return;
     }
 
     try {
+        // Send POST request to backend API
         const response = await fetch('/api/eggs', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date, count })
+            body: JSON.stringify({ date, count }) // Send data as JSON
         });
 
-        const data = await response.json();
+        const data = await response.json(); // Parse JSON response
 
         if (response.ok) {
+            // Success: display message and reset form
             messageEl.textContent = data.message || 'Egg log added successfully!';
-            messageEl.className = 'message success';
+            messageEl.className = 'message success'; // Apply success styling
             document.getElementById('eggForm').reset();
-            document.getElementById('date').valueAsDate = new Date();
+            document.getElementById('date').valueAsDate = new Date(); // Reset date to today
 
+            // If this page is a popup, close it and refresh parent page
             if (typeof closePopupAndRefresh === 'function') {
                 closePopupAndRefresh();
             }
         } else {
+            // Error returned from API
             messageEl.textContent = data.error || 'Error adding egg log.';
             messageEl.className = 'message error';
         }
     } catch (err) {
+        // Network or unexpected error
         console.error(err);
         messageEl.textContent = 'An unexpected error occurred.';
         messageEl.className = 'message error';

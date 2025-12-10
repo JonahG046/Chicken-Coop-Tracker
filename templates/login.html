@@ -1,24 +1,41 @@
-<!DOCTYPE html>
-<html>
-<head><title>Login</title></head>
-<body>
-  <h2>Login</h2>
-  <form method="POST">
-    <input type="text" name="username" placeholder="Username" required><br>
-    <input type="password" name="password" placeholder="Password" required><br>
-    <button type="submit">Login</button>
-  </form>
-  <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <div class="flash-container">
-      {% for category, message in messages %}
-        <div class="flash-message {{ category }}">
-          {{ message }}
+{% extends "layout.html" %}  <!-- Inherits the base layout with header, nav, footer -->
+
+{% block content %}
+<div class="card single-card">
+    <!-- Page heading -->
+    <h2>Login</h2>
+
+    <!-- Login form -->
+    <form method="POST">
+        <!-- Username field -->
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Username" required>
+
+        <!-- Password field -->
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+
+        <!-- Submit button -->
+        <button type="submit" class="add-btn">Login</button>
+    </form>
+
+    <!-- Link to registration page -->
+    <p style="margin-top: 15px; text-align: center;">
+        Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+    </p>
+
+    <!-- Flash messages section -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+        {% for category, message in messages %}
+            <!-- Display each flash message with its category as a CSS class -->
+            <div class="flash-message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
         </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
-</body>
-</html>
+    {% endif %}
+    {% endwith %}
+</div>
+{% endblock %}
