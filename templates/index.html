@@ -25,29 +25,22 @@
     <!-- Feed Card -->
     <div class="card">
       <h2>Feed</h2>
-      <canvas id="feedChart" width="400" height="200"></canvas>
+      <canvas id="feedChart"></canvas>
       <a href="{{ url_for('feed') }}">Go to Feed</a>
     </div>
 
     <!-- Water Card -->
     <div class="card">
       <h2>Water</h2>
-      <canvas id="waterChart" width="400" height="200"></canvas>
+      <canvas id="waterChart"></canvas>
       <a href="{{ url_for('water') }}">Go to Water</a>
     </div>
 
     <!-- Eggs Card -->
     <div class="card">
       <h2>Eggs</h2>
-      <canvas id="eggChart" width="400" height="200"></canvas>
+      <canvas id="eggChart"></canvas>
       <a href="{{ url_for('eggs') }}">Go to Eggs</a>
-    </div>
-
-    <!-- Settings Card -->
-    <div class="card">
-      <h2>Settings</h2>
-      <p>Coop details and preferences</p>
-      <a href="{{ url_for('settings') }}">Go to Settings</a>
     </div>
 
   </div>
@@ -63,31 +56,30 @@
     const eggData = {{ egg_data|tojson }};
 
     function renderChart(ctx, data, label, color) {
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Object.keys(data),
-                datasets: [{
-                    label: label,
-                    data: Object.values(data),
-                    borderColor: color,
-                    backgroundColor: 'transparent', // transparent fill
-                    fill: false,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Object.keys(data),
+          datasets: [{
+            label: label,
+            data: Object.values(data),
+            borderColor: color,
+            backgroundColor: 'transparent',
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
     }
 
-    renderChart(document.getElementById('feedChart').getContext('2d'), feedData, 'Feed (lbs)', 'green');
-    renderChart(document.getElementById('waterChart').getContext('2d'), waterData, 'Water (L)', 'blue');
-    renderChart(document.getElementById('eggChart').getContext('2d'), eggData, 'Eggs (count)', 'orange');
+    renderChart(document.getElementById('feedChart'), feedData, 'Feed (lbs)', 'green');
+    renderChart(document.getElementById('waterChart'), waterData, 'Water (L)', 'blue');
+    renderChart(document.getElementById('eggChart'), eggData, 'Eggs (count)', 'orange');
   </script>
 </body>
 </html>

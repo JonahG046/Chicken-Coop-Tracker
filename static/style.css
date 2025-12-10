@@ -27,6 +27,7 @@
   100% { opacity: 0; transform: translateY(-20px); }
 }
 
+
 /* --- Body & Layout --- */
 body {
   margin: 0;
@@ -42,21 +43,12 @@ header {
   text-align: center;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-header p {
-  margin: 0.3rem 0 0 0;
-  font-size: 1rem;
-}
-
 nav {
   background: #333;
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  flex-wrap: wrap;     /* <-- FIX so mobile doesn't overflow */
+  gap: 1rem;
   padding: 0.5rem 0;
 }
 
@@ -68,11 +60,13 @@ nav a {
 
 nav a:hover { text-decoration: underline; }
 
+
+/* --- Dashboard Grid --- */
 .container.dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));  /* <-- FIX for mobile */
+  gap: 1.5rem;
+  padding: 1.5rem;
   max-width: 1400px;
   margin: auto;
 }
@@ -81,28 +75,21 @@ nav a:hover { text-decoration: underline; }
 .card {
   background: white;
   border-radius: 10px;
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  max-width: 700px;
-  margin: 20px auto;
 }
 
 .card h2 {
-  margin-top: 0;
+  margin: 0;
   color: #4CAF50;
-}
-
-.card p {
-  margin-bottom: 1rem;
 }
 
 .card a {
   display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   background: #4CAF50;
   color: white;
   text-decoration: none;
@@ -111,6 +98,7 @@ nav a:hover { text-decoration: underline; }
 }
 
 .card a:hover { background: #45a049; }
+
 
 /* --- Buttons --- */
 .add-btn,
@@ -132,12 +120,6 @@ button:hover {
   background: #45a049;
 }
 
-/* Popup-specific button */
-.popup-add-btn {
-  width: auto;
-  padding: 10px 20px;
-  font-size: 18px;
-}
 
 /* --- Forms --- */
 form { text-align: left; }
@@ -158,33 +140,45 @@ input[type="number"] {
   box-sizing: border-box;
 }
 
-.message { margin-top: 15px; text-align: center; font-weight: bold; }
-.success { color: #4CAF50; }
-.error { color: #f44336; }
 
-/* --- Chart / Canvas Styling --- */
+/* --- Charts --- */
 canvas {
   width: 100% !important;
-  height: 300px !important;
+  height: 250px !important;  /* smaller for mobile */
   margin-top: 1rem;
 }
 
-.single-card canvas {
-  max-width: 600px;
-}
 
-/* --- Single-card wrapper --- */
+/* --- Single-card page wrapper --- */
 .single-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 3rem;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
 }
 
+
+/* --- Footer --- */
 footer {
   background: #333;
   color: white;
   text-align: center;
   padding: 1rem;
   margin-top: 2rem;
+}
+
+
+/* --- Mobile Tweaks --- */
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.6rem;
+  }
+  nav {
+    gap: 0.6rem;
+  }
+  .card {
+    padding: 1rem;
+  }
+  canvas {
+    height: 200px !important;
+  }
 }
