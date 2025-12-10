@@ -202,7 +202,7 @@ def login():
 def logout():
     # Clear user session and logout
     session.pop('user_id', None)
-    flash('You have been logged out.')
+    flash('You have been logged out.', 'error')
     return redirect(url_for('login'))
 
 # --- Egg Log API ---
