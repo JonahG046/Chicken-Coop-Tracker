@@ -180,5 +180,3 @@ MIT License – see the [LICENSE](LICENSE) file for details.
 
 ## 💬 Contact
 
-- **Your Name** – your.email@example.com  
-- GitHub: [https://github.com/yourusername](https://github.com/yourusername)
